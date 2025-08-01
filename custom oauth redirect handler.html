@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OAuth Redirect Handler</title>
+  <script>
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const authCode = params.get("code");
+
+      if (window.opener && authCode) {
+        // Send the code back to the opener window
+        window.opener.postMessage({ code: authCode }, "*");
+        document.body.innerHTML = "<h2>✅ Authorization complete!</h2><p>You may now close this window.</p>";
+      } else {
+        document.body.innerHTML = "<h2>⚠️ No code found or no opener window.</h2><p>Please check your flow setup.</p>";
+      }
+    };
+  </script>
+</head>
+<body>
+</body>
+</html>
