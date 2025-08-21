@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OAuth Redirect Handler</title>
+</head>
+<body>
+  <script>
+    // Parse query string for ?code=...
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (code) {
+      // Send code back to opener (index.html)
+      window.opener.postMessage({ type: "convoso_code", code }, "*");
+      // Close popup
+      window.close();
+    } else {
+      document.body.innerHTML = "<h3>No code found in redirect URL.</h3>";
+    }
+  </script>
+</body>
+</html>
