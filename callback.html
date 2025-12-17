@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="form-action 'self' https://integration.convoso.com https://*.convoso.com https://rdangalanjr.github.io;">
-  <title>OAuth Redirect Handler</title>
+  <meta charset="UTF-8" />
+  <title>OAuth Callback</title>
 </head>
 <body>
-  <script>
-    // Parse query string for ?code=...
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const state = params.get("state");
 
-    if (code) {
-      // Send code back to opener (index.html)
-      window.opener.postMessage({ type: "convoso_code", code }, "*");
-      // Close popup
-      window.close();
-    } else {
-      document.body.innerHTML = "<h3>No code found in redirect URL.</h3>";
-    }
-  </script>
+  if (code) {
+    // Send code back to opener OR parent safely
+    window.opener?.postMessage(
+      { type: "convoso_oauth_code", code, state },
+      "*"
+    );
+
+    // Fallback: store for reload-based apps
+    localStorage.setItem("convoso_auth_code", code);
+  }
+
+  document.body.innerHTML = "<h3>Login complete. You may close this window.</h3>";
+</script>
 </body>
 </html>
-
-
